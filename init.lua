@@ -140,35 +140,49 @@ require("telescope").setup {
 require("telescope").load_extension("ui-select")
 
 local cmp = require'cmp'
-
-  cmp.setup({
+require("luasnip.loaders.from_vscode").lazy_load()
+cmp.setup({
     snippet = {
-      -- REQUIRED - you must specify a snippet engine
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      end,
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
     },
     mapping = cmp.mapping.preset.insert({
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<C-n>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
     }),
     sources = cmp.config.sources({
-      { name = 'luasnip' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
     }, {
-      { name = 'buffer' },
+        { name = 'buffer' },
     })
-  })
-require("luasnip.loaders.from_vscode").lazy_load()
+})
 vim.g.ale_linters = {
     rust = {'cargo', 'rls', 'rustc'}
 }
-
+require("neo-tree").setup()
 
 --key maps 
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
@@ -182,8 +196,7 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<leader>y", "\"+y")
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
-
+vim.api.nvim_set_keymap('n', '<leader>h', ':nohlsearch<CR>', { noremap = true, silent = true })
 
 
 
@@ -218,7 +231,8 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 50
 vim.opt.colorcolumn = "80"
-
+vim.api.nvim_set_hl(0, "Normal", {bg="none"})
+vim.api.nvim_set_hl(0, "NormalFloat", {bg="none"})
 
 
 
