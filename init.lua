@@ -1,5 +1,5 @@
 vim.opt.number = true
-vim.opt.relativenumber = true
+
 vim.opt.tabstop = 4
 
 vim.opt.shiftwidth = 4
@@ -30,15 +30,6 @@ local plugins = {
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
     {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", 
-            "MunifTanjim/nui.nvim",
-        }
-    },
     {
         "williamboman/mason.nvim"
     },
@@ -72,21 +63,15 @@ local plugins = {
     {
         'tpope/vim-fugitive'
     },
+    {
+        "theprimeagen/harpoon"
+
+    }
    
 }
 local opts = {}
 local builtin = require("telescope.builtin")
 
-function ToggleNeotree()
-    local neotree_open = vim.g.neotree_open or 0
-    if neotree_open == 1 then
-        vim.cmd('Neotree close')
-        vim.g.neotree_open = 0
-    else
-        vim.cmd('Neotree filesystem reveal left')
-        vim.g.neotree_open = 1
-    end
-end
 -- This is your opts table
 
 local config = require("nvim-treesitter.configs")
@@ -151,9 +136,8 @@ cmp.setup({
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ['<C-n>'] = cmp.mapping(function(fallback)
+        ['<C-k>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -182,14 +166,23 @@ cmp.setup({
 vim.g.ale_linters = {
     rust = {'cargo', 'rls', 'rustc'}
 }
-require("neo-tree").setup()
+
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+
 
 --key maps 
+vim.keymap.set('n', "<leader>a", mark.add_file)
+vim.keymap.set('n', "<C-e>", ui.toggle_quick_menu)
+vim.keymap.set('n', "<C-h>",function() ui.nav_file(1) end)
+vim.keymap.set('n', "<C-t",  function() ui.nav_file(2) end)
+vim.keymap.set('n', "<C-n", function() ui.nav_file(3) end)
+vim.keymap.set('n', "<C-s",  function() ui.nav_file(4) end)
+
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>pg', builtin.live_grep, {})
-vim.keymap.set('n', '<C-n>', ':lua ToggleNeotree()<CR>',{noremap = true, silent = true})
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -199,40 +192,38 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.api.nvim_set_keymap('n', '<leader>h', ':nohlsearch<CR>', { noremap = true, silent = true })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- sets 
+vim.opt.relativenumber = true
 vim.opt.incsearch = true
-vim.opt.termguicolors= true
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 50
-vim.opt.colorcolumn = "80"
 vim.api.nvim_set_hl(0, "Normal", {bg="none"})
 vim.api.nvim_set_hl(0, "NormalFloat", {bg="none"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
