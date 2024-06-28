@@ -96,19 +96,49 @@ vim.cmd("colorscheme catppuccin")
 
 local lsp_config = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+
+
+-- On attach function to set key mappings
+local on_attach = function(client, bufnr)
+    local buf_map = function(bufnr, mode, lhs, rhs, opts)
+        opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+    end
+
+    -- Mappings for LSP functionality
+    buf_map(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+    buf_map(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
+    buf_map(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+    buf_map(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+    buf_map(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+    buf_map(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+    buf_map(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+    buf_map(bufnr, 'n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+end
+
+
+
+
+
+
 lsp_config.pyright.setup{
+    on_attach = on_attach,
     capabilities = capabilities
 }
 lsp_config.rust_analyzer.setup{
 
+    on_attach = on_attach,
     capabilities = capabilities
 }
 lsp_config.gopls.setup{
 
+    on_attach = on_attach,
     capabilities = capabilities
 }
 lsp_config.tsserver.setup{
 
+    on_attach = on_attach,
     capabilities = capabilities
 }
 
