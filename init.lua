@@ -208,7 +208,7 @@ vim.keymap.set('n', "<C-t>",  function() ui.nav_file(2) end)
 vim.keymap.set('n', "<C-n>", function() ui.nav_file(3) end)
 vim.keymap.set('n', "<C-s>",  function() ui.nav_file(4) end)
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
-vim.keymap.set('n', '<leader>b', vim.cmd.q)
+vim.keymap.set('n', '<leader>b', "<cmd>q!<CR>")
 vim.keymap.set('n', '<leader>w', vim.cmd.wq)
 
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
@@ -228,8 +228,6 @@ vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 vim.opt.updatetime = 50
-vim.api.nvim_set_hl(0, "Normal", {bg="none"})
-vim.api.nvim_set_hl(0, "NormalFloat", {bg="none"})
 
 
 
