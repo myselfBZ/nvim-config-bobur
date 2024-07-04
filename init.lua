@@ -207,8 +207,10 @@ vim.keymap.set('n', "<C-h>",function() ui.nav_file(1) end)
 vim.keymap.set('n', "<C-t>",  function() ui.nav_file(2) end)
 vim.keymap.set('n', "<C-n>", function() ui.nav_file(3) end)
 vim.keymap.set('n', "<C-s>",  function() ui.nav_file(4) end)
-
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
+vim.keymap.set('n', '<leader>b', vim.cmd.q)
+vim.keymap.set('n', '<leader>w', vim.cmd.wq)
+
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>pg', builtin.live_grep, {})
