@@ -88,7 +88,6 @@ require("mason-lspconfig").setup{
         "rust_analyzer",  -- Rust
         "tsserver",       -- JavaScript
         "pyright",        -- Python
-
     }
 }
 
@@ -140,6 +139,7 @@ lsp_config.tsserver.setup{
     on_attach = on_attach,
     capabilities = capabilities
 }
+
 
 -- This is your opts table
 require("telescope").setup {
